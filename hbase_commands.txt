@@ -1,0 +1,153 @@
+# ==============================================================================
+# 23CSE352: BIG DATA ANALYTICS - PROJECT REVIEW 2
+# Apache HBase Interactive Shell Commands & Analytical Queries
+# Project: Big Data Analytics of Crime Patterns using Apache HBase
+# Team: Sheela Akshar Sakhi & Nishanth S Gowda
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. CLUSTER HEALTH & STATUS CHECKS
+# ------------------------------------------------------------------------------
+status
+version
+whoami
+
+# ------------------------------------------------------------------------------
+# 2. DDL OPERATIONS: SCHEMA DESIGN & TABLE CREATION
+# Schema: Table 'crime_records' with 3 Column Families: 'incident', 'details', 'geo'
+# Row Key Pattern: District#CrimeType#IncidentID (e.g., 019#BURGLARY#14285893)
+# ------------------------------------------------------------------------------
+# Drop old table if exists (optional cleanup)
+# disable 'crime_records'
+# drop 'crime_records'
+
+# Create table with versions
+create 'crime_records', {NAME => 'incident', VERSIONS => 3}, {NAME => 'details'}, {NAME => 'geo'}
+
+# Verify table creation
+list
+describe 'crime_records'
+exists 'crime_records'
+
+# ------------------------------------------------------------------------------
+# 3. DML OPERATIONS: MANUAL INSERTION (PUT) FOR SAMPLE RECORDS
+# ------------------------------------------------------------------------------
+# Insert Record 1: District 019 Burglary Incident
+put 'crime_records', '019#BURGLARY#14285893', 'incident:case_number', 'JK363045'
+put 'crime_records', '019#BURGLARY#14285893', 'incident:date', '2026-08-04T00:00:00.000'
+put 'crime_records', '019#BURGLARY#14285893', 'incident:block', '046XX N HAMILTON AVE'
+put 'crime_records', '019#BURGLARY#14285893', 'incident:iucr', '0760'
+put 'crime_records', '019#BURGLARY#14285893', 'incident:primary_type', 'BURGLARY'
+put 'crime_records', '019#BURGLARY#14285893', 'incident:description', 'BURGLARY FROM MOTOR VEHICLE'
+put 'crime_records', '019#BURGLARY#14285893', 'details:location_desc', 'STREET'
+put 'crime_records', '019#BURGLARY#14285893', 'details:arrest', 'false'
+put 'crime_records', '019#BURGLARY#14285893', 'details:domestic', 'false'
+put 'crime_records', '019#BURGLARY#14285893', 'details:beat', '1911'
+put 'crime_records', '019#BURGLARY#14285893', 'details:district', '019'
+put 'crime_records', '019#BURGLARY#14285893', 'geo:latitude', '41.966241961'
+put 'crime_records', '019#BURGLARY#14285893', 'geo:longitude', '-87.682351725'
+
+# Insert Record 2: District 011 Narcotics Incident (Arrest = true)
+put 'crime_records', '011#NARCOTICS#14284102', 'incident:case_number', 'JK360111'
+put 'crime_records', '011#NARCOTICS#14284102', 'incident:date', '2026-08-04T10:15:00.000'
+put 'crime_records', '011#NARCOTICS#14284102', 'incident:block', '039XX W ROOSEVELT RD'
+put 'crime_records', '011#NARCOTICS#14284102', 'incident:iucr', '1811'
+put 'crime_records', '011#NARCOTICS#14284102', 'incident:primary_type', 'NARCOTICS'
+put 'crime_records', '011#NARCOTICS#14284102', 'incident:description', 'POSS: HEROIN(WHITE)'
+put 'crime_records', '011#NARCOTICS#14284102', 'details:location_desc', 'SIDEWALK'
+put 'crime_records', '011#NARCOTICS#14284102', 'details:arrest', 'true'
+put 'crime_records', '011#NARCOTICS#14284102', 'details:domestic', 'false'
+put 'crime_records', '011#NARCOTICS#14284102', 'details:beat', '1133'
+put 'crime_records', '011#NARCOTICS#14284102', 'details:district', '011'
+put 'crime_records', '011#NARCOTICS#14284102', 'geo:latitude', '41.866501234'
+put 'crime_records', '011#NARCOTICS#14284102', 'geo:longitude', '-87.724109876'
+
+# Insert Record 3: District 011 Domestic Battery Incident (Domestic = true)
+put 'crime_records', '011#BATTERY#14285001', 'incident:case_number', 'JK361222'
+put 'crime_records', '011#BATTERY#14285001', 'incident:date', '2026-08-04T14:40:00.000'
+put 'crime_records', '011#BATTERY#14285001', 'incident:block', '041XX W MADISON ST'
+put 'crime_records', '011#BATTERY#14285001', 'incident:iucr', '0486'
+put 'crime_records', '011#BATTERY#14285001', 'incident:primary_type', 'BATTERY'
+put 'crime_records', '011#BATTERY#14285001', 'incident:description', 'DOMESTIC BATTERY SIMPLE'
+put 'crime_records', '011#BATTERY#14285001', 'details:location_desc', 'APARTMENT'
+put 'crime_records', '011#BATTERY#14285001', 'details:arrest', 'false'
+put 'crime_records', '011#BATTERY#14285001', 'details:domestic', 'true'
+put 'crime_records', '011#BATTERY#14285001', 'details:beat', '1115'
+put 'crime_records', '011#BATTERY#14285001', 'details:district', '011'
+
+# ------------------------------------------------------------------------------
+# 4. POINT LOOKUP RETRIEVAL (GET)
+# ------------------------------------------------------------------------------
+# 4.1 Full Record Point Lookup
+get 'crime_records', '019#BURGLARY#14285893'
+
+# 4.2 Selective Column Family Lookup (Incident specifics only)
+get 'crime_records', '019#BURGLARY#14285893', 'incident'
+
+# 4.3 Specific Qualifier Lookup (Arrest status only)
+get 'crime_records', '019#BURGLARY#14285893', 'details:arrest'
+
+# 4.4 Spatial Telemetry Coordinates Lookup
+get 'crime_records', '019#BURGLARY#14285893', 'geo'
+
+# ------------------------------------------------------------------------------
+# 5. GENERAL SCANNING & RANGE SCANS
+# ------------------------------------------------------------------------------
+# 5.1 Preview first 5 records in table
+scan 'crime_records', {LIMIT => 5}
+
+# 5.2 Scoped District Range Scan (District 011 records)
+scan 'crime_records', {STARTROW => '011#', STOPROW => '012#', LIMIT => 5}
+
+# ------------------------------------------------------------------------------
+# 6. APPLICATION-SPECIFIC ANALYTICAL QUERIES & FILTERS (RUBRIC REQUIREMENT: 4 MARKS)
+# ------------------------------------------------------------------------------
+
+# Filter 1: SingleColumnValueFilter - Find All Crimes Resulting in Arrest (Law Enforcement Efficiency)
+scan 'crime_records', {FILTER => "SingleColumnValueFilter('details', 'arrest', =, 'binary:true')", LIMIT => 5}
+
+# Filter 2: SingleColumnValueFilter - Track Domestic Violence Incidents (Family Safety Intervention)
+scan 'crime_records', {FILTER => "SingleColumnValueFilter('details', 'domestic', =, 'binary:true')", LIMIT => 5}
+
+# Filter 3: PrefixFilter - Rapid Jurisdiction Retrieval for District 019 (Patrol Deployment)
+scan 'crime_records', {FILTER => "PrefixFilter('019#')", LIMIT => 5}
+
+# Filter 4: RowFilter with RegexStringComparator - Cross-District Narcotics Incident Tracking
+scan 'crime_records', {FILTER => "RowFilter(=, 'regexstring:^.*#NARCOTICS#.*')", LIMIT => 5}
+
+# Filter 5: ValueFilter with SubstringComparator - Keyword Investigation for Vehicle Offenses
+scan 'crime_records', {FILTER => "ValueFilter(=, 'substring:VEHICLE')", LIMIT => 5}
+
+# Filter 6: Compound Multi-Filter (FilterList MUST_PASS_ALL) - High Priority: District 011 Narcotics Arrests
+scan 'crime_records', {FILTER => "(PrefixFilter('011#')) AND (SingleColumnValueFilter('details', 'arrest', =, 'binary:true'))", LIMIT => 5}
+
+# Filter 7: ColumnPaginationFilter - Paginate Attributes for Lightweight Network Transfer
+scan 'crime_records', {FILTER => "ColumnPaginationFilter(4, 0)", LIMIT => 5}
+
+# ------------------------------------------------------------------------------
+# 7. AGGREGATION & AUDIT: COUNT OPERATION
+# ------------------------------------------------------------------------------
+# Count total crime incident records loaded into HBase with client-side caching
+count 'crime_records', INTERVAL => 1000, CACHE => 1000
+
+# ------------------------------------------------------------------------------
+# 8. DATA MODIFICATION & DELETION OPERATIONS (DELETE & DELETEALL)
+# ------------------------------------------------------------------------------
+# 8.1 Delete a specific column/qualifier (Obsolete spatial field)
+delete 'crime_records', '019#BURGLARY#14285893', 'geo:x_coordinate'
+
+# Verify that geo:x_coordinate is deleted
+get 'crime_records', '019#BURGLARY#14285893', 'geo'
+
+# 8.2 Delete an entire row (Dismissed / expunged incident)
+deleteall 'crime_records', '019#BURGLARY#14285893'
+
+# Verify row deletion (should return 0 rows)
+get 'crime_records', '019#BURGLARY#14285893'
+
+# ------------------------------------------------------------------------------
+# 9. SCHEMA ALTERATION & MAINTENANCE
+# ------------------------------------------------------------------------------
+# Add a new column family 'audit' to record forensic provenance
+alter 'crime_records', {NAME => 'audit'}
+describe 'crime_records'
