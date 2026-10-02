@@ -34,8 +34,9 @@ echo "=================================================================="
 echo " [2/3] Compiling HBaseCrimeOperations.java"
 echo "=================================================================="
 mkdir -p classes
-javac -cp "$(hbase classpath)" -d classes src/bigdata/HBaseCrimeOperations.java
-echo "[✓] Compilation successful."
+rm -rf classes/*
+javac -source 1.8 -target 1.8 -cp "$(hbase classpath)" -d classes src/bigdata/HBaseCrimeOperations.java
+echo "[✓] Compilation successful (Java 8 bytecode)."
 
 echo ""
 echo "=================================================================="

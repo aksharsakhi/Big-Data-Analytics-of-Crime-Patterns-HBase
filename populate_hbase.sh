@@ -41,8 +41,9 @@ echo "=================================================================="
 echo " [2/3] Compiling HBaseDataLoader.java"
 echo "=================================================================="
 mkdir -p classes
-javac -cp "$(hbase classpath)" -d classes src/bigdata/HBaseDataLoader.java
-echo "[✓] Compilation successful. Bytecode generated in classes/bigdata/"
+rm -rf classes/*
+javac -source 1.8 -target 1.8 -cp "$(hbase classpath)" -d classes src/bigdata/HBaseDataLoader.java
+echo "[✓] Compilation successful (Java 8 bytecode). Bytecode generated in classes/bigdata/"
 
 echo ""
 echo "=================================================================="
