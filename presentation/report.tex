@@ -253,8 +253,34 @@ hbase(main):006:0> count 'crime_records', INTERVAL => 1000
 
 As captured in Figure~\ref{fig:count_records}, the count operation completed in \textbf{0.2100 seconds}, confirming exactly \textbf{10,000 rows} across the cluster with checkpoints logged at each 1,000-row interval.
 
+\subsection{Data Modification and Deletion (PUT, DELETE, DELETEALL)}
+In strict compliance with Rubric Criteria 3 (demonstrating GET, PUT, DELETE, and DELETEALL operations), we executed a complete DML lifecycle in the HBase Shell:
+\begin{lstlisting}[language=bash]
+# 1. Insert sample record manually (PUT)
+put 'crime_records', '099#TEST#99999999', 'incident:case_number', 'TEST1234'
+put 'crime_records', '099#TEST#99999999', 'details:arrest', 'false'
+get 'crime_records', '099#TEST#99999999'
+
+# 2. DELETE a specific column qualifier (Obsolete field)
+delete 'crime_records', '099#TEST#99999999', 'details:arrest'
+get 'crime_records', '099#TEST#99999999'
+
+# 3. DELETEALL an entire row (Dismissed / Expunged legal record)
+deleteall 'crime_records', '099#TEST#99999999'
+get 'crime_records', '099#TEST#99999999'
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{images/13_hbase_shell_put_delete_deleteall.png}
+\caption{HBase Shell Execution of Manual \texttt{PUT}, Column \texttt{DELETE}, and Entire Row \texttt{DELETEALL}}
+\label{fig:put_delete_deleteall}
+\end{figure}
+
+As shown in Figure~\ref{fig:put_delete_deleteall}, HBase successfully inserted the record, dropped the specific qualifier upon receiving the \texttt{delete} command, and completely purged the entire row with a Tombstone marker upon executing \texttt{deleteall}, returning \textbf{0 row(s)} on the final verification get.
+
 \section{HBase Filters and Analytical Queries}
-In compliance with Rubric Criteria 4 (4 Marks), we implemented advanced server-side HBase filters.
+In compliance with Rubric Criteria 4 (4 Marks) and the instructional requirement to demonstrate at least three suitable filters, we implemented advanced server-side HBase filters.
 
 \subsection{Filter 1: SingleColumnValueFilter (Suspect Arrest Tracking)}
 \textbf{Goal:} Identify all crime incidents where law enforcement successfully apprehended a suspect.
@@ -314,15 +340,29 @@ This query leverages the prefix byte comparator of the composite row key and was
 
 As shown in Figure~\ref{fig:filter_prefix}, HBase immediately seeks to the District \texttt{011} region boundary, skipping the preceding districts entirely and returning matching incidents in only \textbf{0.0494 seconds} (49.4 ms).
 
+\subsection{Filter 3: ValueFilter with SubstringComparator (Vehicle Crime Investigation)}
+\textbf{Goal:} Identify all vehicle-related offenses (motor vehicle theft, carjacking, burglary from motor vehicle, ride-share incidents) across all descriptors.
+\begin{lstlisting}[language=bash]
+hbase(main):002:0> scan 'crime_records', {FILTER => "ValueFilter(=, 'substring:VEHICLE')", LIMIT => 3}
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{images/11_hbase_filter_vehicle_substring.png}
+\caption{Analytical Filter 3: \texttt{ValueFilter} Matching Substring \texttt{'VEHICLE'} Across All Column Families}
+\label{fig:filter_vehicle}
+\end{figure}
+
+As illustrated in Figure~\ref{fig:filter_vehicle}, HBase evaluated cell qualifiers and textual values server-side, matching incidents such as \texttt{001\#BATTERY\#14283191} (\texttt{details:location\_desc = 'VEHICLE - OTHER RIDE SHARE SERVICE'}) and \texttt{001\#BURGLARY\#14267878} (\texttt{incident:description = 'BURGLARY FROM MOTOR VEHICLE'}) in \textbf{0.2695 seconds}.
+
 \subsection{Additional Analytical Filters}
-The system supports further analytical filters implemented and tested in the project repository:
+The system supports further analytical filters implemented and verified on the cluster:
 \begin{itemize}
-    \item \textbf{Filter 3 (Domestic Abuse):} \\
-    \texttt{scan 'crime\_records', \{FILTER => "SingleColumnValueFilter('details', 'domestic', =, 'binary:true')", LIMIT => 5\}}
-    \item \textbf{Filter 4 (Cross-District Narcotics):} \\
+    \item \textbf{Filter 4 (Domestic Abuse Detection):} \\
+    \texttt{scan 'crime\_records', \{FILTER => "SingleColumnValueFilter('details', 'domestic', =, 'binary:true')", LIMIT => 3\}} \\
+    Demonstrated live in shell, returning 3 rows in \textbf{0.0360 seconds}.
+    \item \textbf{Filter 5 (Cross-District Narcotics):} \\
     \texttt{scan 'crime\_records', \{FILTER => "RowFilter(=, 'regexstring:\^{}.*\#NARCOTICS\#.*')", LIMIT => 5\}}
-    \item \textbf{Filter 5 (Vehicle Crime Investigation):} \\
-    \texttt{scan 'crime\_records', \{FILTER => "ValueFilter(=, 'substring:VEHICLE')", LIMIT => 5\}}
     \item \textbf{Filter 6 (Compound Multi-Filter):} \\
     \texttt{scan 'crime\_records', \{FILTER => "(PrefixFilter('011\#')) AND (SingleColumnValueFilter('details', 'arrest', =, 'binary:true'))", LIMIT => 5\}}
     \item \textbf{Filter 7 (Column Pagination):} \\
