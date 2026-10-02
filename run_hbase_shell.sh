@@ -4,6 +4,17 @@
 # Purpose: Helper script to launch interactive HBase shell or run automated test puts
 # ==============================================================================
 
+# Auto-detect HBase location in ~/BigData/ if not already in PATH
+if ! command -v hbase &> /dev/null; then
+    for candidate in "$HOME/BigData/HBase" "$HOME/HBase" "/usr/local/hbase" "/opt/hbase"; do
+        if [ -d "$candidate" ] && [ -f "$candidate/bin/hbase" ]; then
+            export HBASE_HOME="$candidate"
+            export PATH="$PATH:$HBASE_HOME/bin"
+            break
+        fi
+    done
+fi
+
 if [ "$1" == "--batch-sample" ]; then
     echo "[*] Executing sample puts from dataset/sample_puts.hbase into HBase Shell..."
     hbase shell dataset/sample_puts.hbase
