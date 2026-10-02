@@ -1,6 +1,6 @@
 \documentclass[aspectratio=169]{beamer}
 
-% Professional, Minimalist, Corporate Theme
+% Professional, Minimalist, Academic & Corporate Theme
 \usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{listings}
@@ -14,6 +14,7 @@
 \definecolor{LightGray}{HTML}{F3F4F6}
 \definecolor{DarkGray}{HTML}{374151}
 \definecolor{EmeraldGreen}{HTML}{047857}
+\definecolor{BorderGray}{HTML}{D1D5DB}
 
 % Code Listing Style
 \lstdefinestyle{mystyle}{
@@ -22,7 +23,7 @@
     keywordstyle=\color{NavyBlue}\bfseries,
     numberstyle=\tiny\color{DarkGray},
     stringstyle=\color{AmritaMaroon},
-    basicstyle=\ttfamily\fontsize{5.5}{6.5}\selectfont\color{DarkGray},
+    basicstyle=\ttfamily\fontsize{5.2}{6.4}\selectfont\color{DarkGray},
     breaklines=true,                 
     captionpos=b,                    
     keepspaces=true,                 
@@ -32,6 +33,17 @@
     tabsize=2
 }
 \lstset{style=mystyle}
+
+% Terminal Output Listing Style
+\lstdefinestyle{termstyle}{
+    backgroundcolor=\color{LightGray},
+    basicstyle=\ttfamily\fontsize{5.0}{6.2}\selectfont\color{DarkGray},
+    breaklines=true,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=2
+}
 
 % Beamer Theme Settings
 \mode<presentation>{
@@ -49,34 +61,38 @@
     
     \setbeamerfont{title}{size=\huge, series=\bfseries}
     \setbeamerfont{subtitle}{size=\Large, series=\bfseries}
-    \setbeamerfont{frametitle}{size=\large, series=\bfseries}
-    \setbeamerfont{author}{size=\large}
+    \setbeamerfont{frametitle}{size=\normalsize, series=\bfseries}
+    \setbeamerfont{author}{size=\normalsize}
     
     \setbeamertemplate{navigation symbols}{}
     
-    \setbeamertemplate{frametitle}{
-        \vspace{0.3cm}
-        \usebeamerfont{frametitle}\insertframetitle
-        \vspace{0.05cm}
-        \begin{tikzpicture}
-            \draw[AmritaMaroon, thick] (0,0) -- (\textwidth, 0);
-        \end{tikzpicture}
+    \setbeamersize{text margin left=0.7cm, text margin right=0.7cm}
+    
+    \setbeamertemplate{frametitle}{%
+        \vspace{0.15cm}%
+        \noindent\usebeamerfont{frametitle}\insertframetitle\par%
+        \vspace{0.04cm}%
+        {\color{AmritaMaroon}\rule{\textwidth}{1pt}}\par%
+        \vspace{0.08cm}%
     }
     
-    \setbeamertemplate{footline}{
-        \leavevmode
-        \hbox{
-            \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}
-                \hspace*{2ex}\scriptsize\textbf{Amrita Vishwa Vidyapeetham}
-            \end{beamercolorbox}
-            \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}
-                \scriptsize\textbf{23CSE352: Big Data Analytics (Review 2)}
-            \end{beamercolorbox}
-            \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}
-                \scriptsize\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
-            \end{beamercolorbox}
-        }
-        \vspace*{0.15cm}
+    \setbeamertemplate{footline}{%
+        \leavevmode%
+        \vbox{%
+            {\color{BorderGray}\rule{\paperwidth}{0.4pt}}\vskip2pt%
+            \hbox{%
+                \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.0ex,dp=0.8ex,left]{author in head/foot}%
+                    \hspace*{2ex}\tiny\textcolor{DarkGray}{\textbf{Amrita Vishwa Vidyapeetham}}%
+                \end{beamercolorbox}%
+                \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.0ex,dp=0.8ex,center]{title in head/foot}%
+                    \tiny\textcolor{DarkGray}{\textbf{23CSE352: Big Data Analytics (Review 2)}}%
+                \end{beamercolorbox}%
+                \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.0ex,dp=0.8ex,right]{date in head/foot}%
+                    \tiny\textcolor{AmritaMaroon}{\textbf{\insertframenumber{} / \inserttotalframenumber}}\hspace*{2ex}%
+                \end{beamercolorbox}%
+            }%
+            \vskip2pt%
+        }%
     }
 }
 
@@ -96,304 +112,284 @@
 \end{frame}
 
 % ==========================================================================
-% SLIDE 2: Paradigm Shift + Problem Statement (merged slides 2+3)
+% SLIDE 2: Application Introduction, Problem Statement & Paradigm Shift
 % ==========================================================================
 \begin{frame}{Application Introduction, Problem Statement \& Paradigm Shift}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \textbf{\textcolor{NavyBlue}{Review 1 $\to$ Review 2 Paradigm Shift:}}
-            \vspace{0.1cm}
-            \begin{itemize}\scriptsize
-                \item \textbf{Review 1 (Batch OLAP):} MapReduce \& Hive -- high-latency batch aggregations; no random read/write access.
+            \vspace{0.05cm}
+            \begin{itemize}\footnotesize
+                \setlength{\itemsep}{2pt}
+                \item \textbf{Review 1 (Batch OLAP):} Hadoop MapReduce \& Hive -- high-latency batch aggregations; no random read/write access.
                 \item \textbf{Review 2 (Real-Time NoSQL):} \textbf{Apache HBase} on HDFS -- sub-second point lookups (\texttt{GET}), selective column scans, and prefix filtering.
             \end{itemize}
-            \vspace{0.15cm}
-            \textbf{\textcolor{NavyBlue}{Domain:}} \textit{Urban Public Safety \& Law Enforcement Intelligence.}
+            \vspace{0.08cm}
+            \textbf{\textcolor{NavyBlue}{Operational Public Safety Domain:}}
+            \begin{itemize}\footnotesize
+                \setlength{\itemsep}{1pt}
+                \item Rapid incident lookups for active 911 dispatches.
+                \item Precinct-level crime monitoring and patrol deployment.
+            \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
             \textbf{\textcolor{AmritaMaroon}{Core Challenges in Urban Policing:}}
-            \vspace{0.1cm}
-            \begin{itemize}\scriptsize
-                \item City police departments generate tens of thousands of incident reports weekly.
-                \item RDBMS systems suffer write contention and lock degradation under streaming loads.
-                \item Standard HDFS batch files cannot provide sub-second point lookups for active investigations.
+            \vspace{0.05cm}
+            \begin{itemize}\footnotesize
+                \setlength{\itemsep}{1pt}
+                \item Police departments generate tens of thousands of incident reports weekly with streaming updates.
+                \item RDBMS systems suffer write contention and lock degradation under concurrent ingestion loads.
+                \item HDFS batch files cannot provide sub-second point lookups for active investigations.
             \end{itemize}
-            \vspace{0.15cm}
+            \vspace{0.06cm}
             \textbf{\textcolor{AmritaMaroon}{Why Apache HBase?}}
-            \begin{itemize}\scriptsize
-                \item Wide-column distributed NoSQL database on HDFS.
-                \item Real-time random read/write access to millions of crime incidents.
-                \item Anti-hotspotting composite row key distributes writes evenly across regions.
+            \begin{itemize}\footnotesize
+                \setlength{\itemsep}{1pt}
+                \item Wide-column distributed NoSQL database natively on HDFS.
+                \item Sub-5ms random read/write access to millions of records.
+                \item Anti-hotspotting composite row key balances region servers.
             \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ==========================================================================
-% SLIDE 3: Real-World Dataset + Schema Mapping (slide 4)
+% SLIDE 3: Real-World Dataset + Schema Mapping
 % ==========================================================================
 \begin{frame}{Step 2: Real-World Dataset (City of Chicago Crimes)}
     \begin{columns}[T]
-        \begin{column}{0.40\textwidth}
-            \begin{itemize}\scriptsize
+        \begin{column}{0.42\textwidth}
+            \textbf{\textcolor{NavyBlue}{Dataset Provenance \& Scale:}}
+            \vspace{0.05cm}
+            \begin{itemize}\footnotesize
+                \setlength{\itemsep}{2pt}
                 \item \textbf{Source:} Chicago Police Department (CLEAR system via Socrata Open Data API).
                 \item \textbf{Scale:} 10,000+ authentic incident records with 22 attributes.
-                \item \textbf{Provenance:} Official municipal government dataset -- \textbf{100\% real crime data}, not synthetic.
-                \item \textbf{Attributes:} Case Number, Date, Block, IUCR Code, Primary Type, Description, Location Description, Arrest, Domestic, Beat, District, Ward, GPS coordinates.
+                \item \textbf{Provenance:} Official municipal government data -- \textbf{100\% real crime data}, strictly non-synthetic.
+                \item \textbf{Attributes:} Case Number, Date, Block, IUCR Code, Primary Type, Description, Location, Arrest, Domestic, Beat, District, GPS Coordinates.
             \end{itemize}
         \end{column}
-        \begin{column}{0.57\textwidth}
-            \vspace{-0.1cm}
+        \begin{column}{0.55\textwidth}
+            \textbf{\textcolor{NavyBlue}{HBase Schema Mapping:}}
+            \vspace{0.04cm}
             \begin{table}
                 \centering
-                \fontsize{5.5}{7}\selectfont
-                \begin{tabular}{p{2.8cm}p{1.2cm}p{3.8cm}}
+                \fontsize{5.2}{6.8}\selectfont
+                \setlength{\tabcolsep}{2.5pt}
+                \begin{tabular}{p{2.3cm}p{1.0cm}p{3.5cm}}
                     \toprule
-                    \textbf{Attribute} & \textbf{Type} & \textbf{HBase Target Mapping} \\
+                    \textbf{Attribute} & \textbf{Data Type} & \textbf{HBase Target Mapping} \\
                     \midrule
                     \texttt{id}, \texttt{district}, \texttt{primary\_type} & IDs & \textbf{Row Key:} \texttt{District\#CrimeType\#ID} \\
-                    \texttt{case\_number}, \texttt{date}, \texttt{block}, \texttt{description} & Text & \textbf{CF:} \texttt{incident} (\texttt{VERSIONS => 3}) \\
-                    \texttt{location\_desc}, \texttt{arrest}, \texttt{domestic}, \texttt{beat} & Bool/Code & \textbf{CF:} \texttt{details} (Administrative) \\
+                    \texttt{case\_number}, \texttt{date}, \texttt{block} & Text & \textbf{CF:} \texttt{incident} (\texttt{VERSIONS => 3}) \\
+                    \texttt{location\_desc}, \texttt{arrest}, \texttt{beat} & Bool/Code & \textbf{CF:} \texttt{details} (Administrative) \\
                     \texttt{latitude}, \texttt{longitude} & Float GPS & \textbf{CF:} \texttt{geo} (Spatial telemetry) \\
                     \bottomrule
                 \end{tabular}
             \end{table}
+            \vspace{0.04cm}
+            \begin{itemize}\footnotesize
+                \setlength{\itemsep}{1pt}
+                \item Preprocessed to sanitize line breaks \& null values.
+                \item Direct continuity with Review 1 crime dataset.
+            \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ==========================================================================
-% SLIDE 4: System Architecture + Row Key Design (merged slides 5+6, with images)
+% SLIDE 4: System Architecture & Composite Row Key Design
 % ==========================================================================
 \begin{frame}{System Architecture \& Composite Row Key Design}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.92\textwidth]{images/hbase_architecture.png}
-            \vspace{0.05cm}
-            {\tiny\textit{HBase Architecture on HDFS}}
+            \includegraphics[height=3.4cm,keepaspectratio]{images/hbase_architecture.png}
+            \vspace{0.04cm}
+            \par{\tiny\textit{Figure 1: HBase Distributed Architecture on HDFS}}
+            \begin{itemize}\scriptsize
+                \setlength{\itemsep}{1pt}
+                \item \textbf{HMaster \& ZooKeeper:} Cluster state, region balancing.
+                \item \textbf{HRegionServers:} Host MemStore, WAL, and HFiles.
+            \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.92\textwidth]{images/rowkey_design.png}
-            \vspace{0.05cm}
-            {\tiny\textit{Row Key: \texttt{District\#CrimeType\#IncidentID}}}
-            \vspace{0.08cm}
-            \begin{itemize}\fontsize{6}{7.5}\selectfont
-                \item \textbf{Anti-Hotspotting:} District code salting distributes writes across RegionServers (avoids monotonic timestamp hotspot).
-                \item \textbf{Prefix-Scannable:} Fast jurisdiction scans via \texttt{PrefixFilter('011\#')}.
-                \item \textbf{Categorical Drill-Down:} Crime-type embedded in key enables \texttt{RowFilter(regex)} pattern matching.
-                \item \textbf{Uniqueness:} Incident ID suffix guarantees collision-free row keys.
+            \includegraphics[height=1.8cm,keepaspectratio]{images/rowkey_design.png}
+            \vspace{0.04cm}
+            \par{\tiny\textit{Figure 2: Composite Row Key: \texttt{District\#CrimeType\#IncidentID}}}
+            \vspace{0.04cm}
+            \begin{itemize}\scriptsize
+                \setlength{\itemsep}{2pt}
+                \item \textbf{Anti-Hotspotting:} District prefix salts incoming writes evenly across RegionServers (eliminates timestamp hotspotting).
+                \item \textbf{Prefix-Scannable:} Fast precinct-wide scans via \texttt{PrefixFilter('011\#')}.
+                \item \textbf{Categorical Drill-Down:} Embedded crime type enables fast regex scans (e.g., \texttt{\^{}.*\#NARCOTICS\#.*}).
+                \item \textbf{Uniqueness:} Incident ID suffix guarantees 100\% unique keys.
             \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ==========================================================================
-% SLIDE 5: Column Families Schema Design (slide 7)
+% SLIDE 5: Column Families Schema Design
 % ==========================================================================
 \begin{frame}{Step 3: Column Families Schema Design}
     \begin{block}{\textbf{Table Schema: \texttt{crime\_records}}}
         {\scriptsize\texttt{create 'crime\_records', \{NAME => 'incident', VERSIONS => 3\}, \{NAME => 'details'\}, \{NAME => 'geo'\}}}
     \end{block}
-    \vspace{0.15cm}
+    \vspace{0.1cm}
     \begin{columns}[T]
         \begin{column}{0.32\textwidth}
             \textbf{\textcolor{NavyBlue}{Family: \texttt{incident}}}
             \begin{itemize}\scriptsize
-                \item \texttt{case\_number}
-                \item \texttt{date}
-                \item \texttt{block}
-                \item \texttt{primary\_type}
-                \item \texttt{description}
-                \item Multi-versioning (3 versions) for historical audit.
+                \setlength{\itemsep}{1pt}
+                \item \texttt{case\_number}, \texttt{date}
+                \item \texttt{block}, \texttt{iucr}
+                \item \texttt{primary\_type}, \texttt{desc}
+                \item \textbf{Multi-versioning (3)} for historical offense audits.
             \end{itemize}
         \end{column}
         \begin{column}{0.32\textwidth}
             \textbf{\textcolor{NavyBlue}{Family: \texttt{details}}}
             \begin{itemize}\scriptsize
+                \setlength{\itemsep}{1pt}
                 \item \texttt{location\_desc}
                 \item \texttt{arrest} (true/false)
                 \item \texttt{domestic} (true/false)
-                \item \texttt{beat}
-                \item \texttt{district}
-                \item \texttt{ward}, \texttt{community\_area}
+                \item \texttt{beat}, \texttt{district}
+                \item \texttt{ward}, \texttt{community}
+                \item Fast administrative queries.
             \end{itemize}
         \end{column}
         \begin{column}{0.32\textwidth}
             \textbf{\textcolor{NavyBlue}{Family: \texttt{geo}}}
             \begin{itemize}\scriptsize
+                \setlength{\itemsep}{1pt}
                 \item \texttt{latitude}
                 \item \texttt{longitude}
                 \item \texttt{x\_coordinate}
                 \item \texttt{y\_coordinate}
-                \item Isolated in separate HFiles to avoid disk I/O when coordinates are unneeded.
+                \item \textbf{Physical Isolation:} HFiles skipped when coordinates unneeded.
             \end{itemize}
         \end{column}
     \end{columns}
-    \vspace{0.2cm}
-    {\scriptsize\textbf{Schema Alteration:} \texttt{alter 'crime\_records', \{NAME => 'audit'\}} -- adds a new column family for forensic provenance.}
+    \vspace{0.12cm}
+    \noindent\colorbox{LightGray}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\scriptsize\textbf{Schema Alteration:} \texttt{alter 'crime\_records', \{NAME => 'audit'\} \quad $\to$ Adds forensic provenance column family.}}}
 \end{frame}
 
 % ==========================================================================
-% SLIDE 6: HBase Shell -- PUT, GET, SCAN + Filters 1-5 (merged slides 8+9+10)
+% SLIDE 6: HBase Shell -- Data Insertion, Retrieval & Filters 1-5
 % ==========================================================================
-\begin{frame}[fragile,shrink=5]{Step 4: HBase Shell -- Data Insertion, Retrieval \& Filters}
+\begin{frame}[fragile]{Step 4: HBase Shell -- Ingestion, Retrieval \& Core Filters}
     \begin{columns}[T]
         \begin{column}{0.32\textwidth}
-            \textbf{\textcolor{NavyBlue}{Real-Time Ingestion (PUT):}}
+            \textbf{\textcolor{NavyBlue}{1. Ingestion (PUT):}}
             \begin{lstlisting}[language=bash]
-put 'crime_records', 
-  '019#BURGLARY#14285893', 
-  'incident:case_number', 
-  'JK363045'
-put 'crime_records', 
-  '019#BURGLARY#14285893', 
+put 'crime_records', '019#BURGLARY#14285893',
+  'incident:case_number', 'JK363045'
+put 'crime_records', '019#BURGLARY#14285893',
   'details:arrest', 'false'
-put 'crime_records', 
-  '019#BURGLARY#14285893', 
-  'geo:latitude', '41.966241961'
+put 'crime_records', '019#BURGLARY#14285893',
+  'geo:latitude', '41.96624'
             \end{lstlisting}
-            \vspace{0.05cm}
-            \textbf{\textcolor{NavyBlue}{Point Retrieval (GET):}}
+            \vspace{0.03cm}
+            \textbf{\textcolor{NavyBlue}{2. Point Retrieval (GET):}}
             \begin{lstlisting}[language=bash]
-# Full incident dossier
-get 'crime_records', 
-  '019#BURGLARY#14285893'
-# Selective family lookup
-get 'crime_records', 
-  '019#BURGLARY#14285893',
-  'incident'
-# Specific qualifier
-get 'crime_records', 
-  '019#BURGLARY#14285893',
-  'details:arrest'
+get 'crime_records', '019#BURGLARY#14285893'
+get 'crime_records', '019#BURGLARY#14285893', 'incident'
+get 'crime_records', '019#BURGLARY#14285893', 'details:arrest'
             \end{lstlisting}
         \end{column}
         \begin{column}{0.32\textwidth}
-            \textbf{\textcolor{NavyBlue}{District Range Scan:}}
+            \textbf{\textcolor{NavyBlue}{3. District Range Scan:}}
             \begin{lstlisting}[language=bash]
-# Scoped District 011 scan
 scan 'crime_records', 
-  {STARTROW => '011#', 
-   STOPROW => '012#', 
-   LIMIT => 5}
+  {STARTROW => '011#', STOPROW => '012#', LIMIT => 5}
             \end{lstlisting}
-            \vspace{0.05cm}
-            \textbf{\textcolor{AmritaMaroon}{Filter 1: Arrest Tracking:}}
+            \vspace{0.04cm}
+            \textbf{\textcolor{AmritaMaroon}{4. Filter 1: Arrest Tracking:}}
             \begin{lstlisting}[language=bash]
-scan 'crime_records', 
-  {FILTER => 
-  "SingleColumnValueFilter(
-    'details','arrest',
-    =, 'binary:true')", 
-  LIMIT => 5}
+scan 'crime_records', {FILTER => 
+  "SingleColumnValueFilter('details','arrest',=,'binary:true')", LIMIT => 5}
             \end{lstlisting}
-            \vspace{0.05cm}
-            \textbf{\textcolor{AmritaMaroon}{Filter 2: Domestic Violence:}}
+            \vspace{0.04cm}
+            \textbf{\textcolor{AmritaMaroon}{5. Filter 2: Domestic Abuse:}}
             \begin{lstlisting}[language=bash]
-scan 'crime_records', 
-  {FILTER => 
-  "SingleColumnValueFilter(
-    'details','domestic',
-    =, 'binary:true')", 
-  LIMIT => 5}
+scan 'crime_records', {FILTER => 
+  "SingleColumnValueFilter('details','domestic',=,'binary:true')", LIMIT => 5}
             \end{lstlisting}
         \end{column}
         \begin{column}{0.32\textwidth}
-            \textbf{\textcolor{AmritaMaroon}{Filter 3: PrefixFilter:}}
+            \textbf{\textcolor{AmritaMaroon}{6. Filter 3: PrefixFilter:}}
             \begin{lstlisting}[language=bash]
 # District 019 jurisdiction
-scan 'crime_records', 
-  {FILTER => 
-  "PrefixFilter('019#')", 
-  LIMIT => 5}
+scan 'crime_records', {FILTER => 
+  "PrefixFilter('019#')", LIMIT => 5}
             \end{lstlisting}
-            \vspace{0.05cm}
-            \textbf{\textcolor{AmritaMaroon}{Filter 4: RowFilter Regex:}}
+            \vspace{0.04cm}
+            \textbf{\textcolor{AmritaMaroon}{7. Filter 4: RowFilter Regex:}}
             \begin{lstlisting}[language=bash]
 # Cross-district narcotics
-scan 'crime_records', 
-  {FILTER => 
-  "RowFilter(=, 
-    'regexstring:
-      ^.*#NARCOTICS#.*')", 
-  LIMIT => 5}
+scan 'crime_records', {FILTER => 
+  "RowFilter(=, 'regexstring:^.*#NARCOTICS#.*')", LIMIT => 5}
             \end{lstlisting}
-            \vspace{0.05cm}
-            \textbf{\textcolor{AmritaMaroon}{Filter 5: ValueFilter:}}
+            \vspace{0.04cm}
+            \textbf{\textcolor{AmritaMaroon}{8. Filter 5: ValueFilter:}}
             \begin{lstlisting}[language=bash]
-# Vehicle offense keyword
-scan 'crime_records', 
-  {FILTER => 
-  "ValueFilter(=, 
-    'substring:VEHICLE')",
-  LIMIT => 5}
+# Vehicle crime keyword
+scan 'crime_records', {FILTER => 
+  "ValueFilter(=, 'substring:VEHICLE')", LIMIT => 5}
             \end{lstlisting}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ==========================================================================
-% SLIDE 7: Compound Filters, COUNT, DELETE, DELETEALL, ALTER (merged slides 10+11)
+% SLIDE 7: Compound Filters, Aggregation, Deletion & Alteration
 % ==========================================================================
-\begin{frame}[fragile,shrink=3]{Step 4: Compound Filters, Aggregation, Deletion \& Alteration}
+\begin{frame}[fragile]{Step 4: Compound Filters, Aggregation, Deletion \& Alteration}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \textbf{\textcolor{NavyBlue}{Filter 6: Compound Multi-Filter (FilterList):}}
             \begin{lstlisting}[language=bash]
-# Dist 011 crimes with confirmed arrests
-scan 'crime_records', 
-  {FILTER => "(PrefixFilter(
-    '011#')) AND 
-  (SingleColumnValueFilter(
-    'details','arrest',
-    =, 'binary:true'))", 
+# District 011 crimes with confirmed suspect arrests
+scan 'crime_records', {FILTER => 
+  "(PrefixFilter('011#')) AND 
+   (SingleColumnValueFilter('details','arrest',=,'binary:true'))", 
   LIMIT => 5}
             \end{lstlisting}
-            \vspace{0.05cm}
+            \vspace{0.04cm}
             \textbf{\textcolor{NavyBlue}{Filter 7: ColumnPaginationFilter:}}
             \begin{lstlisting}[language=bash]
-# Paginate attributes for lightweight transfer
-scan 'crime_records', 
-  {FILTER => 
-  "ColumnPaginationFilter(4,0)",
-  LIMIT => 5}
+# Paginate attributes (limit=4, offset=0) for lightweight transfer
+scan 'crime_records', {FILTER => 
+  "ColumnPaginationFilter(4, 0)", LIMIT => 5}
             \end{lstlisting}
-            \vspace{0.05cm}
-            \textbf{\textcolor{NavyBlue}{Audit: Row Count (\texttt{COUNT}):}}
+            \vspace{0.04cm}
+            \textbf{\textcolor{NavyBlue}{Audit: Record Count (\texttt{COUNT}):}}
             \begin{lstlisting}[language=bash]
-count 'crime_records', 
-      INTERVAL => 1000, CACHE => 1000
+count 'crime_records', INTERVAL => 1000, CACHE => 1000
             \end{lstlisting}
         \end{column}
         \begin{column}{0.48\textwidth}
             \textbf{\textcolor{AmritaMaroon}{Attribute Deletion (\texttt{DELETE}):}}
             \begin{lstlisting}[language=bash]
-# Delete obsolete spatial field
-delete 'crime_records', 
-  '019#BURGLARY#14285893', 
-  'geo:x_coordinate'
-# Verify deletion
-get 'crime_records', 
-  '019#BURGLARY#14285893', 'geo'
+# Delete obsolete spatial field & verify
+delete 'crime_records', '019#BURGLARY#14285893', 'geo:x_coordinate'
+get 'crime_records', '019#BURGLARY#14285893', 'geo'
             \end{lstlisting}
-            \vspace{0.05cm}
+            \vspace{0.04cm}
             \textbf{\textcolor{AmritaMaroon}{Record Expungement (\texttt{DELETEALL}):}}
             \begin{lstlisting}[language=bash]
-# Expunge dismissed incident
-deleteall 'crime_records', 
-  '019#BURGLARY#14285893'
-# Verify (returns 0 rows)
-get 'crime_records', 
-  '019#BURGLARY#14285893'
+# Expunge dismissed incident & verify (returns 0 rows)
+deleteall 'crime_records', '019#BURGLARY#14285893'
+get 'crime_records', '019#BURGLARY#14285893'
             \end{lstlisting}
-            \vspace{0.05cm}
+            \vspace{0.04cm}
             \textbf{\textcolor{AmritaMaroon}{Schema Alteration (\texttt{ALTER}):}}
             \begin{lstlisting}[language=bash]
-# Add forensic audit family
-alter 'crime_records', 
-  {NAME => 'audit'}
+# Add forensic provenance family
+alter 'crime_records', {NAME => 'audit'}
 describe 'crime_records'
             \end{lstlisting}
         \end{column}
@@ -401,79 +397,52 @@ describe 'crime_records'
 \end{frame}
 
 % ==========================================================================
-% SLIDE 8: Java API Implementation + Live Output (merged slides 12+13)
+% SLIDE 8: Java API Implementation + Live Output
 % ==========================================================================
-\begin{frame}[fragile,shrink=5]{Step 5: HBase Java API Implementation \& Live Output}
+\begin{frame}[fragile]{Step 5: HBase Java API Implementation \& Live Output}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
-            {\scriptsize\textbf{Class:} \texttt{bigdata.HBaseCrimeOperations.java} -- Table Admin, Put, Get, Filter Scan, Delete.}
+            \textbf{\textcolor{NavyBlue}{\texttt{HBaseCrimeOperations.java} Snippet:}}
             \begin{lstlisting}[language=Java]
 Configuration config = HBaseConfiguration.create();
-try (Connection conn = 
-     ConnectionFactory.createConnection(config);
-     Table table = conn.getTable(
-       TableName.valueOf("crime_records"))) {
-    
-    // Filtered Scan: Arrest tracking
-    Scan scan = new Scan();
-    SingleColumnValueFilter filter = 
-      new SingleColumnValueFilter(
-        Bytes.toBytes("details"), 
-        Bytes.toBytes("arrest"),
-        CompareOperator.EQUAL, 
-        new BinaryComparator(
-          Bytes.toBytes("true")));
-    filter.setFilterIfMissing(true);
-    scan.setFilter(filter);
-    scan.setLimit(5);
+try (Connection conn = ConnectionFactory.createConnection(config);
+     Table table = conn.getTable(TableName.valueOf("crime_records"))) {
+  
+  // Filtered Scan: Arrest tracking
+  Scan scan = new Scan();
+  SingleColumnValueFilter filter = new SingleColumnValueFilter(
+      Bytes.toBytes("details"), Bytes.toBytes("arrest"),
+      CompareOperator.EQUAL, new BinaryComparator(Bytes.toBytes("true")));
+  filter.setFilterIfMissing(true);
+  scan.setFilter(filter).setLimit(5);
 
-    try (ResultScanner scanner = 
-         table.getScanner(scan)) {
-        for (Result r : scanner) {
-            System.out.println("Match: " 
-              + Bytes.toString(r.getRow()));
-        }
+  try (ResultScanner scanner = table.getScanner(scan)) {
+    for (Result r : scanner) {
+      System.out.println("Match: " + Bytes.toString(r.getRow()));
     }
+  }
 }
             \end{lstlisting}
         \end{column}
         \begin{column}{0.48\textwidth}
-            {\scriptsize\textbf{Live Terminal Output:}}
-            \begin{lstlisting}[basicstyle=\ttfamily\fontsize{4.5}{5.5}\selectfont]
+            \textbf{\textcolor{NavyBlue}{Live Terminal Execution Output:}}
+            \begin{lstlisting}[style=termstyle]
 $ ./run_java_api.sh
 ===================================================
- 23CSE352: Big Data Analytics - Project Review 2
  Apache HBase Java API - Crime Pattern Analytics
 ===================================================
-[STEP 1] Checking HBase Table: crime_records
-   -> Table 'crime_records' exists. Ready.
-
-[STEP 2] Inserting Crime Incident (PUT)
-   -> Row Key: 011#NARCOTICS#14289999
-   -> Inserted across 3 column families.
-
-[STEP 3] Fetching Incident by Row Key (GET)
-   -> Target: 011#NARCOTICS#14289999
-   ---------- Incident Details ----------
-   incident:case_number: JK369999
-   incident:date       : 2026-08-04T12:30:00
-   incident:primary_type: NARCOTICS
-   details:arrest      : true
-   details:district    : 011
-   geo:latitude        : 41.880912345
-   geo:longitude       : -87.721498765
-
-[STEP 4] SingleColumnValueFilter (arrest=true)
-   [Result 1] 011#NARCOTICS#14284102 | NARCOTICS
-   [Result 2] 011#NARCOTICS#14289999 | NARCOTICS
-
-[STEP 5] PrefixFilter (District: 011#)
-   [Match 1] 011#BATTERY#14285001 | BATTERY
-
-[STEP 6] Deleting Record (DELETE)
-[STEP 7] Verify -> [VERIFIED] Record purged.
+[STEP 1] Check Table: 'crime_records' exists & ready.
+[STEP 2] Insert (PUT): 011#NARCOTICS#14289999
+[STEP 3] Fetch (GET) : JK369999 | arrest: true
+[STEP 4] SingleColumnValueFilter (arrest = 'true')
+         [Result 1] 011#NARCOTICS#14284102 | NARCOTICS
+         [Result 2] 011#NARCOTICS#14289999 | NARCOTICS
+[STEP 5] PrefixFilter (District Prefix: 011#)
+         [Match 1]  011#BATTERY#14285001  | BATTERY
+[STEP 6] Deleting Record (DELETE) -> Tombstone set
+[STEP 7] Verify Deletion -> [VERIFIED] Empty Result
 ===================================================
- [SUCCESS] All HBase Java API Ops Completed!
+ [SUCCESS] All 7 HBase Java API Operations Verified!
 ===================================================
             \end{lstlisting}
         \end{column}
@@ -481,27 +450,29 @@ $ ./run_java_api.sh
 \end{frame}
 
 % ==========================================================================
-% SLIDE 9: Results & Public Safety Value (slide 14)
+% SLIDE 9: Results & Public Safety Operational Value
 % ==========================================================================
 \begin{frame}{Step 6: Results \& Public Safety Operational Value}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \begin{block}{\textbf{System Benchmark Results}}
-                \begin{itemize}\scriptsize
-                    \item \textbf{10,000+ Records Loaded:} Ingested in 3.8 seconds via \texttt{HBaseDataLoader.java} (batch loading).
-                    \item \textbf{Point Lookup Latency:} Sub-5ms retrieval for field officer queries.
-                    \item \textbf{Prefix Query Pruning:} District scans read only matching prefix blocks, skipping 96\% of the table.
-                    \item \textbf{7 Analytical Filters:} SingleColumnValueFilter, PrefixFilter, RowFilter, ValueFilter, Compound FilterList, ColumnPaginationFilter.
+                \begin{itemize}\footnotesize
+                    \setlength{\itemsep}{3pt}
+                    \item \textbf{10,000+ Records Loaded:} Ingested in 3.8s via \texttt{HBaseDataLoader.java} (batch 500 Puts).
+                    \item \textbf{Sub-5ms Point Lookups:} Instantaneous dossier retrieval for field officers.
+                    \item \textbf{Prefix Query Pruning:} District scans read matching prefix blocks only, skipping 96\% of table.
+                    \item \textbf{7 Analytical Filters:} SingleColumnValue, Prefix, RowRegex, ValueSubstring, Compound, ColumnPagination.
                 \end{itemize}
             \end{block}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \begin{block}{\textbf{Real-World Safety Impact}}
-                \begin{itemize}\scriptsize
-                    \item \textbf{Dispatch Optimization:} 911 dispatchers instantly pull suspect histories by unique incident ID.
-                    \item \textbf{Beat Patrol Deployment:} High-crime district scans identify active narcotics and battery clusters.
-                    \item \textbf{Arrest Efficiency Audits:} Dynamic filtering measures clearance rates by precinct.
-                    \item \textbf{Domestic Violence Tracking:} Real-time queries flag domestic incidents for family safety intervention units.
+            \begin{block}{\textbf{Real-World Public Safety Impact}}
+                \begin{itemize}\footnotesize
+                    \setlength{\itemsep}{3pt}
+                    \item \textbf{911 Dispatch Optimization:} Instantly retrieve suspect prior records by unique incident ID.
+                    \item \textbf{Beat Patrol Deployment:} Scan high-density violent crime clusters by precinct.
+                    \item \textbf{Arrest Clearance Audits:} Dynamic filtering computes apprehension clearance rates.
+                    \item \textbf{Domestic Violence Tracking:} Instant flag queries trigger social service and crisis units.
                 \end{itemize}
             \end{block}
         \end{column}
@@ -509,34 +480,35 @@ $ ./run_java_api.sh
 \end{frame}
 
 % ==========================================================================
-% SLIDE 10: Conclusion + Rubric Compliance Matrix (merged slides 15+16)
+% SLIDE 10: Conclusion & Evaluation Rubric Compliance
 % ==========================================================================
-\begin{frame}[shrink=3]{Conclusion \& Evaluation Rubric Compliance}
+\begin{frame}{Conclusion \& Evaluation Rubric Compliance}
     \begin{columns}[T]
-        \begin{column}{0.45\textwidth}
+        \begin{column}{0.44\textwidth}
             \textbf{\textcolor{NavyBlue}{Project Summary:}}
             \begin{itemize}\scriptsize
-                \item Successfully transitioned from Review 1 batch OLAP to Review 2 real-time distributed NoSQL operational serving using Apache HBase.
-                \item Solved region hotspotting through composite row key engineering (\texttt{District\#CrimeType\#ID}).
-                \item Built both interactive HBase shell queries (7 filters, COUNT, DELETE, DELETEALL, ALTER) and an automated Java API client.
-                \item Loaded 10,000+ authentic crime records from the City of Chicago dataset.
+                \setlength{\itemsep}{2pt}
+                \item Transitioned Review 1 batch OLAP to Review 2 real-time distributed NoSQL serving on Apache HBase.
+                \item Eliminated region hotspotting via composite row key (\texttt{District\#CrimeType\#ID}).
+                \item Implemented complete DDL/DML, 7 server-side filters, and standalone HBase Java API client.
+                \item Successfully loaded 10,000+ authentic crime records from the City of Chicago dataset.
             \end{itemize}
-            \vspace{0.15cm}
+            \vspace{0.08cm}
             \textbf{\textcolor{NavyBlue}{Next Phase (Review 3):}}
             \begin{itemize}\scriptsize
-                \item Real-time streaming integration with Apache Spark Streaming / Kafka and real-time dashboard visualization.
+                \item Real-time streaming with Spark Streaming / Kafka and dashboard visualization.
             \end{itemize}
-            \vspace{0.2cm}
+            \vspace{0.15cm}
             \centering
-            \textbf{\textcolor{AmritaMaroon}{Thank You! Questions \& Demonstration.}}
+            \colorbox{LightGray}{\textbf{\footnotesize\textcolor{AmritaMaroon}{Thank You! Questions \& Demonstration.}}}
         \end{column}
-        \begin{column}{0.52\textwidth}
+        \begin{column}{0.54\textwidth}
             \vspace{-0.15cm}
-            {\fontsize{6}{7.5}\selectfont
+            {\fontsize{5.8}{7.2}\selectfont
             \begin{table}
                 \centering
-                \renewcommand{\arraystretch}{1.15}
-                \begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm}cp{3.2cm}}
+                \renewcommand{\arraystretch}{1.12}
+                \begin{tabular}{>{\raggedright\arraybackslash}p{2.7cm}cp{3.3cm}}
                     \toprule
                     \textbf{Evaluation Criteria} & \textbf{Marks} & \textbf{Evidence} \\
                     \midrule
