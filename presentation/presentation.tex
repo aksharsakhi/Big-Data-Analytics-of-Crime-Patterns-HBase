@@ -502,15 +502,16 @@ try (Connection conn = ConnectionFactory.createConnection(config);
             \end{itemize}
             \vspace{0.1cm}
             \centering
-            \colorbox{LightGray}{\textbf{\footnotesize\textcolor{AmritaMaroon}{Thank You! Questions \& Live Demonstration.}}}
+            \colorbox{LightGray}{\textbf{\scriptsize\textcolor{AmritaMaroon}{Thank You! Questions \& Live Demonstration.}}}
         \end{column}
         \begin{column}{0.54\textwidth}
             \vspace{-0.15cm}
             {\fontsize{5.8}{7.2}\selectfont
             \begin{table}
                 \centering
+                \setlength{\tabcolsep}{3.5pt}
                 \renewcommand{\arraystretch}{1.12}
-                \begin{tabular}{>{\raggedright\arraybackslash}p{2.7cm}cp{3.3cm}}
+                \begin{tabular}{>{\raggedright\arraybackslash}p{2.55cm}cp{3.45cm}}
                     \toprule
                     \textbf{Evaluation Criteria} & \textbf{Marks} & \textbf{Evidence} \\
                     \midrule
@@ -520,7 +521,7 @@ try (Connection conn = ConnectionFactory.createConnection(config);
                     HBase Filters \& analytical queries & 4 & $\ge 3$ filters: \texttt{SingleColumnValueFilter}, \texttt{PrefixFilter}, \texttt{ValueFilter} \\
                     Java API implementation & 2 & \texttt{HBaseCrimeOps.java}: Admin, Put, Get, Filter Scan, Delete \\
                     \midrule
-                    \textbf{Total Score} & \textbf{10/10} & \textbf{All rubric criteria fully satisfied} \\
+                    \multicolumn{3}{c}{\textbf{All rubric criteria fully satisfied}} \\
                     \bottomrule
                 \end{tabular}
             \end{table}
