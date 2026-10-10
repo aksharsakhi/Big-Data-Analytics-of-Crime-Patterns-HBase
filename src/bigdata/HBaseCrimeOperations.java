@@ -17,12 +17,21 @@ import java.util.List;
  * HBase Java API Implementation for Chicago Crime Pattern Analytics
  * 
  * Demonstrates:
- * 1. Connecting to Apache HBase
- * 2. Creating an HBase Table with Column Families ('incident', 'details', 'geo')
- * 3. Inserting a Crime Record (Put)
- * 4. Retrieving a Crime Record by Row Key (Get)
- * 5. Scanning Records with Filters (SingleColumnValueFilter, PrefixFilter)
- * 6. Deleting a Record (Delete)
+ * 1. Connecting to Apache HBase using Connection API
+ * 2. Creating an HBase Table with Column Families ('incident', 'details', 'geo') using Admin API
+ * 3. Inserting a Crime Record (Put API)
+ * 4. Retrieving a Crime Record by Row Key (Get API)
+ * 5. Scanning Records with Filters (SingleColumnValueFilter, PrefixFilter) using Scan API
+ * 6. Deleting a Record (Delete API)
+ * 
+ * Admin API
+ * Put API
+ * Get API
+ * Scan API
+ * Delete API
+ * Connection API
+ *
+ * 
  */
 public class HBaseCrimeOperations {
 

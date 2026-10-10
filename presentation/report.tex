@@ -37,8 +37,17 @@
 }
 \lstset{style=mystyle}
 
-\title{\textbf{23CSE352: Big Data Analytics}\\ \Large Project Review 2 Report \\ \vspace{0.4cm} \Large \textbf{Big Data Analytics of Crime Patterns using Apache HBase}}
-\author{\textbf{Team Members:}\\ Sheela Akshar Sakhi \quad \& \quad Nishanth S Gowda}
+\title{\textbf{23CSE352: Big Data Analytics}\\ \Large Project Review 2 Comprehensive Report \\ \vspace{0.4cm} \Large \textbf{Big Data Analytics of Crime Patterns using Apache HBase}}
+\author{
+    \textbf{Team Members:}\\[0.25cm]
+    \begin{tabular}{cc}
+        \textbf{Sheela Akshar Sakhi} & \textbf{Nishanth S Gowda} \\
+        Roll No: \texttt{CB.SC.U4CSE23547} & Roll No: \texttt{CB.SC.U4CSE23538}
+    \end{tabular}\\[0.35cm]
+    \normalsize Department of Computer Science and Engineering\\
+    \normalsize Amrita School of Computing\\
+    \normalsize Amrita Vishwa Vidyapeetham
+}
 \date{\today}
 
 \begin{document}
@@ -392,6 +401,24 @@ The Java program connects to HBase via \texttt{ConnectionFactory.createConnectio
 \end{figure}
 
 As shown in Figure~\ref{fig:java_api_exec}, the compiled Java application executed all operations cleanly, verified the filters, and performed the transactional deletion with an empty result confirmation.
+
+\section{Team Contributions \& Ownership Matrix}
+To demonstrate balanced academic accountability and technical execution, individual student responsibilities for Project Review 2 are outlined in Table~\ref{tab:contributions}:
+
+\begin{table}[H]
+\centering
+\caption{Individual Student Contribution Matrix for Project Review 2}
+\label{tab:contributions}
+\begin{tabular}{p{4.2cm}p{3.5cm}p{7.3cm}}
+\toprule
+\textbf{Team Member} & \textbf{Roll Number} & \textbf{Core Module Ownership \& Deliverables} \\
+\midrule
+\textbf{Sheela Akshar Sakhi} & \texttt{CB.SC.U4CSE23547} & Real-world dataset acquisition \& sanitization; Composite row key engineering; Native Java Client API development (\texttt{HBaseCrimeOperations.java}); Comprehensive technical documentation. \\
+\addlinespace[0.2cm]
+\textbf{Nishanth S Gowda} & \texttt{CB.SC.U4CSE23538} & Wide-column table schema design; Distributed HBase Shell execution (DDL/DML); Advanced server-side filters implementation; Presentation slides \& cluster verification. \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Evaluation Rubric Compliance Matrix}
 The implementation satisfies all evaluation criteria specified in the Project Review 2 instructions:
